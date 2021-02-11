@@ -1,5 +1,6 @@
 const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   entry: {
@@ -37,5 +38,9 @@ module.exports = {
         to: path.resolve(__dirname, "build"),
       },
     ]),
+    new webpack.DefinePlugin({
+      "typeof CANVAS_RENDERER": JSON.stringify(true),
+      "typeof WEBGL_RENDERER": JSON.stringify(true),
+    }),
   ],
 };
