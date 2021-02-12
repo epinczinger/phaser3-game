@@ -5,7 +5,15 @@ export default class TitleScene extends Phaser.Scene {
     super("Title");
   }
 
-  preload() {}
+  preload() {
+    this.load.image("skategirl", "assets/skater.png");
+    this.load.image("background", "assets/background.png");
+    this.load.image("ground", "assets/ground.png");
+    this.load.image("asphalt", "assets/asphalts.png");
+    this.load.image('beer','assets/beer.png' );
+  }
 
-  create() {}
+  create() {
+    this.scene.start("Game");
+  }
 }

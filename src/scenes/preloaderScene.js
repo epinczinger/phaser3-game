@@ -11,11 +11,8 @@ export default class PreloaderScene extends Phaser.Scene {
   
   preload() {
     // add logo image
-    this.add.image(400, 200, "logo");
+    this.add.image(300, 300, "logo").setScale(0.5);
 
-    this.timedEvent = this.time.delayedCall(2000, this.ready, [], this);
-
-    // load assets needed in our game
     this.load.image("blueButton1", "assets/ui/blue_button02.png");
     this.load.image("blueButton2", "assets/ui/blue_button03.png");
     this.load.image("phaserLogo", "assets/skater.png");
@@ -24,12 +21,9 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.audio("bgMusic", ["assets/TownTheme.mp3"]);
   }
 
-  ready() {
-    this.readyCount++;
-    if (this.readyCount === 2) {
-      this.scene.start("Title");
-    }
-  }
 
-  create() {}
+  create() {
+
+    this.scene.start("Title");
+  }
 }
