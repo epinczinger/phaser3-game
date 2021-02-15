@@ -20,11 +20,14 @@ export default class GameScene extends Phaser.Scene {
     
 
     player = this.physics.add.image(300, 100, "skategirl").setScale(0.1);
-    
-    player.setBounce(0.2);
+    police = this.physics.add.image(200, 400, 'police').setScale(1.5); 
+
+    player.setBounce(0.1);
     player.setCollideWorldBounds(true);
+    police.setCollideWorldBounds(true);
 
     this.physics.add.collider(player, platforms);
+    this.physics.add.collider(police, platforms);
 
     
     

@@ -11,6 +11,7 @@ export default class TitleScene extends Phaser.Scene {
     this.load.image("ground", "assets/ground.png");
     this.load.image("asphalt", "assets/asphalts.png");
     this.load.image('beer','assets/beer.png' );
+    this.load.image('police', 'assets/police.png');
   }
 
   create() {
