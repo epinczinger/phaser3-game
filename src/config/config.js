@@ -12,5 +12,4 @@ export default {
       debug: false,
     },
   },
-  // scenes: [Preloader],
 };
