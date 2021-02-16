@@ -16,12 +16,14 @@ export default class GameScene extends Phaser.Scene {
     this.ground = this.physics.add.existing(this.ground, true);
 
     this.player = this.playerSetup();
-    
+
     this.police = this.physics.add.image(200, 400, "police").setScale(1.5);
 
     this.police.setCollideWorldBounds(true);
     this.physics.add.collider(this.player, this.ground);
     this.physics.add.collider(this.police, this.ground);
+
+    this.cursors = this.input.keyboard.createCursorKeys();
 
     // this.add.text(50, 50, "Have a good ride", { fill: "#0f0" });
     // this.add.image(300, 500, "beer").setScale(1);
@@ -40,6 +42,27 @@ export default class GameScene extends Phaser.Scene {
     player.setBounce(0.1);
     player.setCollideWorldBounds(true);
 
+    this.anims.create({
+      key: "left",
+      frames: this.anims.generateFrameNumbers("skategirl", [1, 2, 7,3,8,9,4,5]),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "run",
+      frames: this.anims.generateFrameNumbers("skategirl", [1,2,7]),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "right",
+      frames: this.anims.generateFrameNumbers('skategirl', { start: 5, end: 9 }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
     return player;
   }
 
@@ -49,5 +72,22 @@ export default class GameScene extends Phaser.Scene {
     // if (this.gameOver) {
     //   return;
     // }
+    if (this.cursors.left.isDown) {
+      this.player.setVelocityX(-160);
+
+      this.player.anims.play("left", true);
+    } else if (this.cursors.right.isDown) {
+      this.player.setVelocityX(160);
+
+      this.player.anims.play("right", true);
+    } else {
+      this.player.setVelocityX(10);
+
+      this.player.anims.play("run");
+    }
+
+    if (this.cursors.up.isDown && this.player.body.touching.down) {
+      this.player.setVelocityY(-430);
+    }
   }
 }
