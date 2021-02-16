@@ -35,13 +35,14 @@ export default class GameScene extends Phaser.Scene {
 
     this.physics.add.overlap(this.player, beer, this.collectBeer, null, this);
   }
+  
   collectBeer(beer) {
     beer.disableBody(true, true);
   }
 
   moveBackground() {
-    this.background.tilePositionX += 0.5;
-    this.ground.tilePositionX += 1.5;
+    this.background.tilePositionX += gameOptions.backgroundSpeed;
+    this.ground.tilePositionX += gameOptions.groundSpeed;
   }
 
   playerSetup() {
@@ -107,7 +108,7 @@ export default class GameScene extends Phaser.Scene {
       this.player.setVelocityX(-160);
 
       this.player.anims.play("left", true);
-    } else {
+    } else if (this.player.body.touching.down) {
       this.player.setVelocityX(0);
       this.player.anims.play("run", true);
     }
