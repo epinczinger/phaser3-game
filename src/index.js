@@ -22,4 +22,6 @@ class Game extends Phaser.Game {
   }
 }
 
-window.game = new Game();
+window.onload = function () {
+  window.game = new Game();
+}

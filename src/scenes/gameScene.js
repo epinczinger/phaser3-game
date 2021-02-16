@@ -9,7 +9,7 @@ export default class GameScene extends Phaser.Scene {
   preload() {}
   create() {
    
-   this.add.image(400, 300, "background");
+    this.add.image(400, 300, "background");
     let platforms;
     let player;
     let police;
@@ -29,13 +29,17 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(police, platforms);
 
-    
+
     
     this.add.text(50, 50, "Have a good ride", { fill: "#0f0" });
     this.add.image(300, 500, "beer").setScale(1);
     this.add.image(200, 200, "rock");
   }
 
+    
+  update () {
+    
+  }
   
 }
 
