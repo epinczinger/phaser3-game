@@ -108,6 +108,5 @@ export default class PreloaderScene extends Phaser.Scene {
   }
   create() {
     this.add.image(300, 300, "logo").setScale(0.5);
-    this.scene.start("Title");
   }
 }
