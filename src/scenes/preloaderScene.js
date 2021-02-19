@@ -14,6 +14,8 @@ export default class PreloaderScene extends Phaser.Scene {
       frameWidth: 40,
       frameHeight: 56,
     });
+
+    this.load.image("platform", "assets/ground.png");
     this.load.image("background", "assets/background.png");
     this.load.image("ground", "assets/ground.png");
     this.load.image("beer", "assets/beer.png");

@@ -20,22 +20,80 @@ export default class GameScene extends Phaser.Scene {
       .tileSprite(400, 550, game.width / 2, 50, "ground")
       .setScale(1.75);
     this.ground = this.physics.add.existing(this.ground, true);
-    let beer = this.add.image(350, 450, "beer").setScale(1);
-
+    this.beer = this.add.image(350, 450, "beer").setScale(1);   
+    
     this.player = this.playerSetup();
     this.police = this.physics.add.image(200, 400, "police").setScale(1.5);
+   
+   this.physics.add.collider(this.player, this.ground);
+   this.physics.add.collider(this.police, this.ground);
+   this.physics.add.collider(this.player, this.platformGroup);
+   this.physics.add.collider(this.police, this.platformGroup);
 
-    this.police.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, this.ground);
-    this.physics.add.collider(this.police, this.ground);
+   this.physics.add.overlap(this.player, this.beer, this.collectBeer, null, this);
+    this.platformGroup = this.add.group({
+      // once a platform is removed, it's added to the pool
+      removeCallback: function (platform) {
+        platform.scene.platformPool.add(platform);
+      },
+    });
+    
+
+    // pool
+    this.platformPool = this.add.group({
+      // once a platform is removed from the pool, it's added to the active platforms group
+      removeCallback: function (platform) {
+        platform.scene.platformGroup.add(platform);
+      },
+    });
+    this.addPlatform(game.config.width, game.config.width / 2);
+    // // this.add.image(200, 200, "rock");
+    // let beers = this.physics.add.group({
+    //   key: "beer",
+    //   repeat: 100,
+    //   setXY: { x: 12, y: 0, stepX: 70 },
+    // });
+    // this.physics.add.collider(beers, this.ground);
+
+    //   this.physics.add.overlap(this.player, beers, this.collectBeer, null, this);
+    
+    
+   
+    // this.police = this.physics.add.image(200, 400, "police").setScale(1.5);
+
+    // this.police.setCollideWorldBounds(true);
+   
+    // this.physics.add.collider(this.police, this.ground);
 
     this.cursors = this.input.keyboard.createCursorKeys();
-
-    // this.add.image(200, 200, "rock");
-
-    this.physics.add.overlap(this.player, beer, this.collectBeer, null, this);
   }
-  
+
+  addPlatform(platformWidth, posX) {
+    let platform;
+    if (this.platformPool.getLength()) {
+      platform = this.platformPool.getFirst();
+      platform.x = posX;
+      platform.active = true;
+      platform.visible = true;
+      this.platformPool.remove(platform);
+    } else {
+      platform = this.physics.add.sprite(
+        posX,
+        game.config.height * 0.1,
+        "platform"
+      );
+      platform.body.allowGravity = false;
+      platform.setImmovable(true);
+      platform.setVelocityX(gameOptions.groundSpeed);
+      this.platformGroup.add(platform);
+    }
+    platform.displayWidth = platformWidth;
+    this.nextPlatformDistance = Phaser.Math.Between(
+      gameOptions.spawnRange[0],
+      gameOptions.spawnRange[1]
+    );
+  }
+
   collectBeer(beer) {
     beer.disableBody(true, true);
   }
@@ -95,9 +153,33 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
-    this.moveBackground();
 
-    if (this.cursors.up.isDown && this.player.body.touching.down) {
+    this.moveBackground();
+    // recycling platforms
+    let minDistance = game.config.width;
+    this.platformGroup.getChildren().forEach(function (platform) {
+      let platformDistance =
+        game.config.width - platform.x - platform.displayWidth / 2;
+      minDistance = Math.min(minDistance, platformDistance);
+      if (platform.x < -platform.displayWidth / 2) {
+        this.platformGroup.killAndHide(platform);
+        this.platformGroup.remove(platform);
+      }
+    }, this);
+
+    // adding new platforms
+    if (minDistance > this.nextPlatformDistance) {
+      var nextPlatformWidth = Phaser.Math.Between(
+        gameOptions.platformSizeRange[0],
+        gameOptions.platformSizeRange[1]
+      );
+      this.addPlatform(
+        nextPlatformWidth,
+        game.config.width + nextPlatformWidth / 2
+      );
+    }
+
+     if (this.cursors.up.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(-gameOptions.jumpForce);
       this.player.anims.play("jumping", true);
     } else if (this.cursors.right.isDown) {
