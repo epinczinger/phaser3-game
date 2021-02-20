@@ -1,6 +1,6 @@
 export default {
   playerGravity: 900,
-  jumpForce: 500,
+  jumpForce: 600,
   playerStartPosition: 200,
   groundSpeed: -160,
   backgroundSpeed: 0.5,

@@ -20,56 +20,88 @@ export default class GameScene extends Phaser.Scene {
       .tileSprite(400, 550, game.width / 2, 50, "ground")
       .setScale(1.75);
     this.ground = this.physics.add.existing(this.ground, true);
-    this.beer = this.add.image(350, 450, "beer").setScale(1);   
-    
+ 
     this.player = this.playerSetup();
     this.police = this.physics.add.image(200, 400, "police").setScale(1.5);
-   
-   this.physics.add.collider(this.player, this.ground);
-   this.physics.add.collider(this.police, this.ground);
-   this.physics.add.collider(this.player, this.platformGroup);
-   this.physics.add.collider(this.police, this.platformGroup);
 
-   this.physics.add.overlap(this.player, this.beer, this.collectBeer, null, this);
     this.platformGroup = this.add.group({
-      // once a platform is removed, it's added to the pool
       removeCallback: function (platform) {
         platform.scene.platformPool.add(platform);
       },
     });
-    
-
-    // pool
     this.platformPool = this.add.group({
-      // once a platform is removed from the pool, it's added to the active platforms group
       removeCallback: function (platform) {
         platform.scene.platformGroup.add(platform);
       },
     });
+
+    this.beerGroup = this.add.group({
+      removeCallback(beer) {
+        beer.scene.beerPool.add(beer);
+      },
+    });
+
+    this.beerPool = this.add.group({
+      removeCallback(beer) {
+        beer.scene.beerGroup.add(beer);
+      },
+    });
+
     this.addPlatform(game.config.width, game.config.width / 2);
     // // this.add.image(200, 200, "rock");
-    // let beers = this.physics.add.group({
-    //   key: "beer",
-    //   repeat: 100,
-    //   setXY: { x: 12, y: 0, stepX: 70 },
-    // });
     // this.physics.add.collider(beers, this.ground);
-
-    //   this.physics.add.overlap(this.player, beers, this.collectBeer, null, this);
-    
-    
-   
     // this.police = this.physics.add.image(200, 400, "police").setScale(1.5);
-
     // this.police.setCollideWorldBounds(true);
-   
     // this.physics.add.collider(this.police, this.ground);
-
+    this.physics.add.collider(this.player, this.ground);
+    this.physics.add.collider(this.police, this.ground);
+    this.physics.add.collider(this.player, this.platformGroup);
+    this.physics.add.collider(this.police, this.platformGroup);
+      this.physics.add.overlap(
+        this.player,
+        this.beerGroup,
+        function (player, beer) {
+          this.tweens.add({
+            targets: beer,
+            y: beer.y - 100,
+            alpha: 0,
+            duration: 800,
+            ease: "Cubic.easeOut",
+            callbackScope: this,
+            onComplete: function () {
+              this.beerGroup.killAndHide(beer);
+              this.beerGroup.remove(beer);
+            },
+          });
+        },
+        null,
+        this
+      );
+ 
     this.cursors = this.input.keyboard.createCursorKeys();
+  }
+
+  addbeer(posX) {
+    let beer;
+    if (this.beerPool.getLength()) {
+      beer = this.beerPool.getFirst();
+      beer.x = posX;
+      beer.active = true;
+      beer.visible = true;
+      this.beerPool.remove(beer);
+    } else {
+      beer = this.physics.add.image(posX, 300 * 0.7, "beer");
+
+      beer.body.allowGravity = false;
+      beer.setVelocityX(gameOptions.groundSpeed);
+
+      this.beerGroup.add(beer);
+    }
   }
 
   addPlatform(platformWidth, posX) {
     let platform;
+    this.addedPlatforms += 1;
     if (this.platformPool.getLength()) {
       platform = this.platformPool.getFirst();
       platform.x = posX;
@@ -79,7 +111,7 @@ export default class GameScene extends Phaser.Scene {
     } else {
       platform = this.physics.add.sprite(
         posX,
-        game.config.height * 0.1,
+        game.config.height * 0.6,
         "platform"
       );
       platform.body.allowGravity = false;
@@ -92,6 +124,10 @@ export default class GameScene extends Phaser.Scene {
       gameOptions.spawnRange[0],
       gameOptions.spawnRange[1]
     );
+    let willBeBeer = Phaser.Math.Between(0,10);
+    if (willBeBeer > 4 ) {
+    this.addbeer(posX);}
+    
   }
 
   collectBeer(beer) {
@@ -153,10 +189,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
-
     this.moveBackground();
-    // recycling platforms
+
     let minDistance = game.config.width;
+
     this.platformGroup.getChildren().forEach(function (platform) {
       let platformDistance =
         game.config.width - platform.x - platform.displayWidth / 2;
@@ -166,8 +202,13 @@ export default class GameScene extends Phaser.Scene {
         this.platformGroup.remove(platform);
       }
     }, this);
+     this.beerGroup.getChildren().forEach((beer) => {
+       if (beer.x < -20) {
+         this.beerGroup.killAndHide(beer);
+         this.beerGroup.remove(beer);
+       }
+     }, this);
 
-    // adding new platforms
     if (minDistance > this.nextPlatformDistance) {
       var nextPlatformWidth = Phaser.Math.Between(
         gameOptions.platformSizeRange[0],
@@ -179,7 +220,7 @@ export default class GameScene extends Phaser.Scene {
       );
     }
 
-     if (this.cursors.up.isDown && this.player.body.touching.down) {
+    if (this.cursors.up.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(-gameOptions.jumpForce);
       this.player.anims.play("jumping", true);
     } else if (this.cursors.right.isDown) {

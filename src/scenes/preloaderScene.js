@@ -14,7 +14,6 @@ export default class PreloaderScene extends Phaser.Scene {
       frameWidth: 40,
       frameHeight: 56,
     });
-
     this.load.image("platform", "assets/ground.png");
     this.load.image("background", "assets/background.png");
     this.load.image("ground", "assets/ground.png");
@@ -27,7 +26,6 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image("box", "assets/ui/grey_box.png");
     this.load.image("checkedBox", "assets/ui/blue_boxCheckmark.png");
     this.load.audio("bgMusic", ["assets/mainMusic.mp3"]);
-    // display progress bar
     var progressBar = this.add.graphics();
     var progressBox = this.add.graphics();
     progressBox.fillStyle(0x222222, 0.8);
@@ -68,7 +66,6 @@ export default class PreloaderScene extends Phaser.Scene {
     });
     assetText.setOrigin(0.5, 0.5);
 
-    // update progress bar
     this.load.on("progress", function (value) {
       percentText.setText(parseInt(value * 100) + "%");
       progressBar.clear();
@@ -76,12 +73,10 @@ export default class PreloaderScene extends Phaser.Scene {
       progressBar.fillRect(250, 280, 300 * value, 30);
     });
 
-    // update file progress text
     this.load.on("fileprogress", function (file) {
       assetText.setText("Loading asset: " + file.key);
     });
 
-    // remove progress bar when complete
     this.load.on(
       "complete",
       function () {
