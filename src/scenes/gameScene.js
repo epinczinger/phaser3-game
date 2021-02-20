@@ -22,7 +22,6 @@ export default class GameScene extends Phaser.Scene {
     this.ground = this.physics.add.existing(this.ground, true);
 
     this.player = this.playerSetup();
-    this.police = this.physics.add.image(200, 400, "police").setScale(1.5);
 
     this.platformGroup = this.add.group({
       removeCallback: function (platform) {
@@ -59,15 +58,25 @@ export default class GameScene extends Phaser.Scene {
       },
     });
 
+    this.policeGroup = this.add.group({
+      removeCallback(police) {
+        police.scene.policePool.add(police);
+      },
+    });
+
+    this.policePool = this.add.group({
+      removeCallback(police) {
+        police.scene.policeGroup.add(police);
+      },
+    });
+
     this.addPlatform(game.config.width, game.config.width / 2);
     // this.physics.add.collider(beers, this.ground);
     // this.police = this.physics.add.image(200, 400, "police").setScale(1.5);
     // this.police.setCollideWorldBounds(true);
     // this.physics.add.collider(this.police, this.ground);
     this.physics.add.collider(this.player, this.ground);
-    this.physics.add.collider(this.police, this.ground);
     this.physics.add.collider(this.player, this.platformGroup);
-    this.physics.add.collider(this.police, this.platformGroup);
     this.physics.add.overlap(
       this.player,
       this.beerGroup,
@@ -103,9 +112,9 @@ export default class GameScene extends Phaser.Scene {
     } else {
       let upOrDown = Phaser.Math.Between(1, 10);
       if (upOrDown > 5) {
-        beer = this.physics.add.image(posX, 210, "beer");
+        beer = this.physics.add.image(posX, gameOptions.beerUpPosition, "beer");
       } else {
-        beer = this.physics.add.image(posX, 410, "beer");
+        beer = this.physics.add.image(posX, gameOptions.beerDownPosition, "beer");
       }
       beer.body.allowGravity = false;
       beer.setVelocityX(gameOptions.groundSpeed);
@@ -123,12 +132,29 @@ export default class GameScene extends Phaser.Scene {
       rock.visible = true;
       this.rockPool.remove(rock);
     } else {
-      rock = this.physics.add.image(posX, 473, "rock");
+      rock = this.physics.add.image(posX, gameOptions.rockPosition, "rock");
 
       rock.body.allowGravity = false;
       rock.setVelocityX(gameOptions.groundSpeed);
 
       this.rockGroup.add(rock);
+    }
+  }
+  addpolice(posX) {
+    let police;
+    if (this.policePool.getLength()) {
+      police = this.policePool.getFirst();
+      police.x = posX;
+      police.active = true;
+      police.visible = true;
+      this.policePool.remove(police);
+    } else {
+      police = this.physics.add.image(posX, gameOptions.policePosition, "police").setScale(1.5);
+
+      police.body.allowGravity = false;
+      police.setVelocityX(gameOptions.groundSpeed);
+
+      this.policeGroup.add(police);
     }
   }
 
@@ -158,12 +184,14 @@ export default class GameScene extends Phaser.Scene {
       gameOptions.spawnRange[1]
     );
 
-    let willBeBeerOrRock = Phaser.Math.Between(1, 10);
-    if (willBeBeerOrRock > 3) {
+    let willBeBeerOrRockorPolice = Phaser.Math.Between(1, 10);
+    if (willBeBeerOrRockorPolice > 7) {
       this.addbeer(posX);
-    } else {
+    } else if (willBeBeerOrRockorPolice > 5) {
       this.addRock(posX);
-    }
+    } else if (willBeBeerOrRockorPolice > 3) {
+      this.addpolice(posX);
+    } 
   }
 
   collectBeer(beer) {
