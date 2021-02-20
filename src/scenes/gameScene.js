@@ -90,8 +90,12 @@ export default class GameScene extends Phaser.Scene {
       beer.visible = true;
       this.beerPool.remove(beer);
     } else {
-      beer = this.physics.add.image(posX, 300 * 0.7, "beer");
-
+      let upOrDown = Phaser.Math.Between(1,10);
+    if (upOrDown > 5 ) {
+      beer = this.physics.add.image(posX, 210, "beer");
+    } else {
+      beer = this.physics.add.image(posX, 410, "beer");
+    } 
       beer.body.allowGravity = false;
       beer.setVelocityX(gameOptions.groundSpeed);
 
@@ -124,8 +128,9 @@ export default class GameScene extends Phaser.Scene {
       gameOptions.spawnRange[0],
       gameOptions.spawnRange[1]
     );
-    let willBeBeer = Phaser.Math.Between(0,10);
-    if (willBeBeer > 4 ) {
+
+    let willBeBeer = Phaser.Math.Between(1,10);
+    if (willBeBeer > 3 ) {
     this.addbeer(posX);}
     
   }
