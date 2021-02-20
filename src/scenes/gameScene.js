@@ -20,7 +20,7 @@ export default class GameScene extends Phaser.Scene {
       .tileSprite(400, 550, game.width / 2, 50, "ground")
       .setScale(1.75);
     this.ground = this.physics.add.existing(this.ground, true);
- 
+
     this.player = this.playerSetup();
     this.police = this.physics.add.image(200, 400, "police").setScale(1.5);
 
@@ -47,8 +47,19 @@ export default class GameScene extends Phaser.Scene {
       },
     });
 
+    this.rockGroup = this.add.group({
+      removeCallback(rock) {
+        rock.scene.rockPool.add(rock);
+      },
+    });
+
+    this.rockPool = this.add.group({
+      removeCallback(rock) {
+        rock.scene.rockGroup.add(rock);
+      },
+    });
+
     this.addPlatform(game.config.width, game.config.width / 2);
-    // // this.add.image(200, 200, "rock");
     // this.physics.add.collider(beers, this.ground);
     // this.police = this.physics.add.image(200, 400, "police").setScale(1.5);
     // this.police.setCollideWorldBounds(true);
@@ -57,27 +68,27 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.police, this.ground);
     this.physics.add.collider(this.player, this.platformGroup);
     this.physics.add.collider(this.police, this.platformGroup);
-      this.physics.add.overlap(
-        this.player,
-        this.beerGroup,
-        function (player, beer) {
-          this.tweens.add({
-            targets: beer,
-            y: beer.y - 100,
-            alpha: 0,
-            duration: 800,
-            ease: "Cubic.easeOut",
-            callbackScope: this,
-            onComplete: function () {
-              this.beerGroup.killAndHide(beer);
-              this.beerGroup.remove(beer);
-            },
-          });
-        },
-        null,
-        this
-      );
- 
+    this.physics.add.overlap(
+      this.player,
+      this.beerGroup,
+      function (player, beer) {
+        this.tweens.add({
+          targets: beer,
+          y: beer.y - 100,
+          alpha: 0,
+          duration: 800,
+          ease: "Cubic.easeOut",
+          callbackScope: this,
+          onComplete: function () {
+            this.beerGroup.killAndHide(beer);
+            this.beerGroup.remove(beer);
+          },
+        });
+      },
+      null,
+      this
+    );
+
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
@@ -90,16 +101,34 @@ export default class GameScene extends Phaser.Scene {
       beer.visible = true;
       this.beerPool.remove(beer);
     } else {
-      let upOrDown = Phaser.Math.Between(1,10);
-    if (upOrDown > 5 ) {
-      beer = this.physics.add.image(posX, 210, "beer");
-    } else {
-      beer = this.physics.add.image(posX, 410, "beer");
-    } 
+      let upOrDown = Phaser.Math.Between(1, 10);
+      if (upOrDown > 5) {
+        beer = this.physics.add.image(posX, 210, "beer");
+      } else {
+        beer = this.physics.add.image(posX, 410, "beer");
+      }
       beer.body.allowGravity = false;
       beer.setVelocityX(gameOptions.groundSpeed);
 
       this.beerGroup.add(beer);
+    }
+  }
+
+  addRock(posX) {
+    let rock;
+    if (this.rockPool.getLength()) {
+      rock = this.rockPool.getFirst();
+      rock.x = posX;
+      rock.active = true;
+      rock.visible = true;
+      this.rockPool.remove(rock);
+    } else {
+      rock = this.physics.add.image(posX, 473, "rock");
+
+      rock.body.allowGravity = false;
+      rock.setVelocityX(gameOptions.groundSpeed);
+
+      this.rockGroup.add(rock);
     }
   }
 
@@ -129,10 +158,12 @@ export default class GameScene extends Phaser.Scene {
       gameOptions.spawnRange[1]
     );
 
-    let willBeBeer = Phaser.Math.Between(1,10);
-    if (willBeBeer > 3 ) {
-    this.addbeer(posX);}
-    
+    let willBeBeerOrRock = Phaser.Math.Between(1, 10);
+    if (willBeBeerOrRock > 3) {
+      this.addbeer(posX);
+    } else {
+      this.addRock(posX);
+    }
   }
 
   collectBeer(beer) {
@@ -207,12 +238,12 @@ export default class GameScene extends Phaser.Scene {
         this.platformGroup.remove(platform);
       }
     }, this);
-     this.beerGroup.getChildren().forEach((beer) => {
-       if (beer.x < -20) {
-         this.beerGroup.killAndHide(beer);
-         this.beerGroup.remove(beer);
-       }
-     }, this);
+    this.beerGroup.getChildren().forEach((beer) => {
+      if (beer.x < -20) {
+        this.beerGroup.killAndHide(beer);
+        this.beerGroup.remove(beer);
+      }
+    }, this);
 
     if (minDistance > this.nextPlatformDistance) {
       var nextPlatformWidth = Phaser.Math.Between(
