@@ -9,6 +9,8 @@ export default class GameScene extends Phaser.Scene {
 
   preload() {}
   create() {
+    this.score = 0;
+
     this.background = this.add.tileSprite(
       400,
       300,
@@ -71,32 +73,29 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.addPlatform(game.config.width, game.config.width / 2);
-    // this.physics.add.collider(beers, this.ground);
-    // this.police = this.physics.add.image(200, 400, "police").setScale(1.5);
-    // this.police.setCollideWorldBounds(true);
-    // this.physics.add.collider(this.police, this.ground);
+
     this.physics.add.collider(this.player, this.ground);
     this.physics.add.collider(this.player, this.platformGroup);
     this.physics.add.overlap(
       this.player,
       this.beerGroup,
       function (player, beer) {
-        this.tweens.add({
-          targets: beer,
-          y: beer.y - 100,
-          alpha: 0,
-          duration: 800,
-          ease: "Cubic.easeOut",
-          callbackScope: this,
-          onComplete: function () {
+        
+            
             this.beerGroup.killAndHide(beer);
             this.beerGroup.remove(beer);
-          },
-        });
+            
+
+        this.score += 100;
       },
       null,
       this
     );
+
+    this.scoreText = this.add.text(16, 16, `Score: ${this.score}`, {
+      fontSize: "32px",
+      fill: "#000",
+    });
 
     this.cursors = this.input.keyboard.createCursorKeys();
   }
@@ -185,11 +184,11 @@ export default class GameScene extends Phaser.Scene {
     );
 
     let willBeBeerOrRockorPolice = Phaser.Math.Between(1, 10);
-    if (willBeBeerOrRockorPolice > 7) {
+    if (willBeBeerOrRockorPolice > 5 && willBeBeerOrRockorPolice <= 10) {
       this.addbeer(posX);
-    } else if (willBeBeerOrRockorPolice > 5) {
+    } else if (willBeBeerOrRockorPolice > 3 && willBeBeerOrRockorPolice <= 5) {
       this.addRock(posX);
-    } else if (willBeBeerOrRockorPolice > 3) {
+    } else if (willBeBeerOrRockorPolice > 1 && willBeBeerOrRockorPolice <=3) {
       this.addpolice(posX);
     } 
   }
@@ -252,8 +251,13 @@ export default class GameScene extends Phaser.Scene {
     return player;
   }
 
+  updateScore(){
+    this.scoreText.setText(`Score: ${this.score}`);
+  }
+
   update() {
     this.moveBackground();
+    this.updateScore();
 
     let minDistance = game.config.width;
 
@@ -267,7 +271,7 @@ export default class GameScene extends Phaser.Scene {
       }
     }, this);
     this.beerGroup.getChildren().forEach((beer) => {
-      if (beer.x < -20) {
+      if (beer.x < -beer.displayWidth/2) {
         this.beerGroup.killAndHide(beer);
         this.beerGroup.remove(beer);
       }

@@ -9,5 +9,5 @@ export default {
   policePosition: 260,
   rockPosition: 473,
   beerUpPosition: 210,
-  beerDownPosition: 140,
+  beerDownPosition: 440,
 };
