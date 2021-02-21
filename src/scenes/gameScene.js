@@ -4,7 +4,6 @@ import gameOptions from "../config/gameOptions";
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super("Game");
-    this.gameOver = false;
   }
 
   preload() {}
@@ -80,12 +79,31 @@ export default class GameScene extends Phaser.Scene {
       this.player,
       this.beerGroup,
       function (player, beer) {
-        
-            
-            this.beerGroup.killAndHide(beer);
-            this.beerGroup.remove(beer);
-            
+        this.beerGroup.killAndHide(beer);
+        this.beerGroup.remove(beer);
 
+        this.score += 100;
+      },
+      null,
+      this
+    );
+
+    this.physics.add.overlap(
+      this.player,
+      this.rockGroup,
+      function (player, rock) {
+        this.gameOver();
+        this.score += 100;
+      },
+      null,
+      this
+    );
+
+    this.physics.add.overlap(
+      this.player,
+      this.policeGroup,
+      function (player, police) {
+        this.gameOver();
         this.score += 100;
       },
       null,
@@ -113,7 +131,11 @@ export default class GameScene extends Phaser.Scene {
       if (upOrDown > 5) {
         beer = this.physics.add.image(posX, gameOptions.beerUpPosition, "beer");
       } else {
-        beer = this.physics.add.image(posX, gameOptions.beerDownPosition, "beer");
+        beer = this.physics.add.image(
+          posX,
+          gameOptions.beerDownPosition,
+          "beer"
+        );
       }
       beer.body.allowGravity = false;
       beer.setVelocityX(gameOptions.groundSpeed);
@@ -148,7 +170,9 @@ export default class GameScene extends Phaser.Scene {
       police.visible = true;
       this.policePool.remove(police);
     } else {
-      police = this.physics.add.image(posX, gameOptions.policePosition, "police").setScale(1.5);
+      police = this.physics.add
+        .image(posX, gameOptions.policePosition, "police")
+        .setScale(1.5);
 
       police.body.allowGravity = false;
       police.setVelocityX(gameOptions.groundSpeed);
@@ -188,13 +212,19 @@ export default class GameScene extends Phaser.Scene {
       this.addbeer(posX);
     } else if (willBeBeerOrRockorPolice > 3 && willBeBeerOrRockorPolice <= 5) {
       this.addRock(posX);
-    } else if (willBeBeerOrRockorPolice > 1 && willBeBeerOrRockorPolice <=3) {
+    } else if (willBeBeerOrRockorPolice > 1 && willBeBeerOrRockorPolice <= 3) {
       this.addpolice(posX);
-    } 
+    }
   }
 
   collectBeer(beer) {
     beer.disableBody(true, true);
+  }
+
+  gameOver() {
+    this.physics.pause();
+    this.anims.pauseAll();
+    this.player.setTint(0xff0000);
   }
 
   moveBackground() {
@@ -251,7 +281,7 @@ export default class GameScene extends Phaser.Scene {
     return player;
   }
 
-  updateScore(){
+  updateScore() {
     this.scoreText.setText(`Score: ${this.score}`);
   }
 
@@ -271,7 +301,7 @@ export default class GameScene extends Phaser.Scene {
       }
     }, this);
     this.beerGroup.getChildren().forEach((beer) => {
-      if (beer.x < -beer.displayWidth/2) {
+      if (beer.x < -beer.displayWidth / 2) {
         this.beerGroup.killAndHide(beer);
         this.beerGroup.remove(beer);
       }
