@@ -225,6 +225,21 @@ export default class GameScene extends Phaser.Scene {
     this.physics.pause();
     this.anims.pauseAll();
     this.player.setTint(0xff0000);
+    this.gameOverMenu = this.add.text(100,150,
+      ["GAME OVER", "Press M to return to the menu", "Press P to play again"],
+      {
+        fontSize: "32px",
+        fill: "#000",
+      },
+    );
+
+    this.input.keyboard.on("keydown-M", () => {
+      this.scene.start("Title");
+    });
+
+    this.input.keyboard.on("keydown-P", () => {
+      this.scene.start("Game");
+    });
   }
 
   moveBackground() {
