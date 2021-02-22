@@ -13,12 +13,12 @@ export default class GameScene extends Phaser.Scene {
     this.background = this.add.tileSprite(
       400,
       300,
-      game.width / 2,
+      this.game.width / 2,
       50,
       'background',
     );
     this.ground = this.add
-      .tileSprite(400, 550, game.width / 2, 50, 'ground')
+      .tileSprite(400, 550, this.game.width / 2, 50, 'ground')
       .setScale(1.75);
     this.ground = this.physics.add.existing(this.ground, true);
 
@@ -71,14 +71,14 @@ export default class GameScene extends Phaser.Scene {
       },
     });
 
-    this.addPlatform(game.config.width, game.config.width / 2);
+    this.addPlatform(this.game.config.width, this.game.config.width / 2);
 
     this.physics.add.collider(this.player, this.ground);
     this.physics.add.collider(this.player, this.platformGroup);
     this.physics.add.overlap(
       this.player,
       this.beerGroup,
-      function (player, beer) {
+      (player, beer) => {
         this.beerGroup.killAndHide(beer);
         this.beerGroup.remove(beer);
 
@@ -91,7 +91,7 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.overlap(
       this.player,
       this.rockGroup,
-      function () {
+      () => {
         this.gameOver();
         this.score += 100;
       },
@@ -102,7 +102,7 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.overlap(
       this.player,
       this.policeGroup,
-      function () {
+      () => {
         this.gameOver();
         this.score += 100;
       },
@@ -194,7 +194,7 @@ export default class GameScene extends Phaser.Scene {
     } else {
       platform = this.physics.add.sprite(
         posX,
-        game.config.height * 0.6,
+        this.game.config.height * 0.6,
         'platform',
       );
       platform.body.allowGravity = false;
@@ -305,10 +305,10 @@ export default class GameScene extends Phaser.Scene {
     this.moveBackground();
     this.updateScore();
 
-    let minDistance = game.config.width;
+    let minDistance = this.game.config.width;
 
-    this.platformGroup.getChildren().forEach(function (platform) {
-      const platformDistance = game.config.width - platform.x - platform.displayWidth / 2;
+    this.platformGroup.getChildren().forEach((platform) => {
+      const platformDistance = this.game.config.width - platform.x - platform.displayWidth / 2;
       minDistance = Math.min(minDistance, platformDistance);
       if (platform.x < -platform.displayWidth / 2) {
         this.platformGroup.killAndHide(platform);
@@ -329,7 +329,7 @@ export default class GameScene extends Phaser.Scene {
       );
       this.addPlatform(
         nextPlatformWidth,
-        game.config.width + nextPlatformWidth / 2,
+        this.game.config.width + nextPlatformWidth / 2,
       );
     }
 
