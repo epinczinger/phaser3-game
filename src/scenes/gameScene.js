@@ -1,36 +1,36 @@
-import "phaser";
-import gameOptions from "../config/gameOptions";
+import Phaser from 'phaser';
+import gameOptions from '../config/gameOptions';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
-    super("Game");
+    super('Game');
   }
 
-  preload() {}
   create() {
     this.score = 0;
 
+    this.anims.resumeAll();
     this.background = this.add.tileSprite(
       400,
       300,
       game.width / 2,
       50,
-      "background"
+      'background',
     );
     this.ground = this.add
-      .tileSprite(400, 550, game.width / 2, 50, "ground")
+      .tileSprite(400, 550, game.width / 2, 50, 'ground')
       .setScale(1.75);
     this.ground = this.physics.add.existing(this.ground, true);
 
     this.player = this.playerSetup();
 
     this.platformGroup = this.add.group({
-      removeCallback: function (platform) {
+      removeCallback(platform) {
         platform.scene.platformPool.add(platform);
       },
     });
     this.platformPool = this.add.group({
-      removeCallback: function (platform) {
+      removeCallback(platform) {
         platform.scene.platformGroup.add(platform);
       },
     });
@@ -85,34 +85,34 @@ export default class GameScene extends Phaser.Scene {
         this.score += 100;
       },
       null,
-      this
+      this,
     );
 
     this.physics.add.overlap(
       this.player,
       this.rockGroup,
-      function (player, rock) {
+      function () {
         this.gameOver();
         this.score += 100;
       },
       null,
-      this
+      this,
     );
 
     this.physics.add.overlap(
       this.player,
       this.policeGroup,
-      function (player, police) {
+      function () {
         this.gameOver();
         this.score += 100;
       },
       null,
-      this
+      this,
     );
 
     this.scoreText = this.add.text(16, 16, `Score: ${this.score}`, {
-      fontSize: "32px",
-      fill: "#000",
+      fontSize: '32px',
+      fill: '#000',
     });
 
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -127,14 +127,14 @@ export default class GameScene extends Phaser.Scene {
       beer.visible = true;
       this.beerPool.remove(beer);
     } else {
-      let upOrDown = Phaser.Math.Between(1, 10);
+      const upOrDown = Phaser.Math.Between(1, 10);
       if (upOrDown > 5) {
-        beer = this.physics.add.image(posX, gameOptions.beerUpPosition, "beer");
+        beer = this.physics.add.image(posX, gameOptions.beerUpPosition, 'beer');
       } else {
         beer = this.physics.add.image(
           posX,
           gameOptions.beerDownPosition,
-          "beer"
+          'beer',
         );
       }
       beer.body.allowGravity = false;
@@ -153,7 +153,7 @@ export default class GameScene extends Phaser.Scene {
       rock.visible = true;
       this.rockPool.remove(rock);
     } else {
-      rock = this.physics.add.image(posX, gameOptions.rockPosition, "rock");
+      rock = this.physics.add.image(posX, gameOptions.rockPosition, 'rock');
 
       rock.body.allowGravity = false;
       rock.setVelocityX(gameOptions.groundSpeed);
@@ -161,6 +161,7 @@ export default class GameScene extends Phaser.Scene {
       this.rockGroup.add(rock);
     }
   }
+
   addpolice(posX) {
     let police;
     if (this.policePool.getLength()) {
@@ -171,7 +172,7 @@ export default class GameScene extends Phaser.Scene {
       this.policePool.remove(police);
     } else {
       police = this.physics.add
-        .image(posX, gameOptions.policePosition, "police")
+        .image(posX, gameOptions.policePosition, 'police')
         .setScale(1.5);
 
       police.body.allowGravity = false;
@@ -194,7 +195,7 @@ export default class GameScene extends Phaser.Scene {
       platform = this.physics.add.sprite(
         posX,
         game.config.height * 0.6,
-        "platform"
+        'platform',
       );
       platform.body.allowGravity = false;
       platform.setImmovable(true);
@@ -204,10 +205,10 @@ export default class GameScene extends Phaser.Scene {
     platform.displayWidth = platformWidth;
     this.nextPlatformDistance = Phaser.Math.Between(
       gameOptions.spawnRange[0],
-      gameOptions.spawnRange[1]
+      gameOptions.spawnRange[1],
     );
 
-    let willBeBeerOrRockorPolice = Phaser.Math.Between(1, 10);
+    const willBeBeerOrRockorPolice = Phaser.Math.Between(1, 10);
     if (willBeBeerOrRockorPolice > 5 && willBeBeerOrRockorPolice <= 10) {
       this.addbeer(posX);
     } else if (willBeBeerOrRockorPolice > 3 && willBeBeerOrRockorPolice <= 5) {
@@ -219,26 +220,26 @@ export default class GameScene extends Phaser.Scene {
 
   collectBeer(beer) {
     beer.disableBody(true, true);
+    this.score += 100;
   }
 
   gameOver() {
     this.physics.pause();
     this.anims.pauseAll();
     this.player.setTint(0xff0000);
-    this.gameOverMenu = this.add.text(100,150,
-      ["GAME OVER", "Press M to return to the menu", "Press P to play again"],
+    this.gameOverMenu = this.add.text(100, 150,
+      ['GAME OVER', 'Press M to return to the menu', 'Press P to play again'],
       {
-        fontSize: "32px",
-        fill: "#000",
-      },
-    );
+        fontSize: '32px',
+        fill: '#000',
+      });
 
-    this.input.keyboard.on("keydown-M", () => {
-      this.scene.start("Title");
+    this.input.keyboard.on('keydown-M', () => {
+      this.scene.start('Title');
     });
 
-    this.input.keyboard.on("keydown-P", () => {
-      this.scene.start("Game");
+    this.input.keyboard.on('keydown-P', () => {
+      this.scene.start('Game');
     });
   }
 
@@ -248,14 +249,14 @@ export default class GameScene extends Phaser.Scene {
   }
 
   playerSetup() {
-    const player = this.physics.add.sprite(300, 100, "skategirl").setScale(1.5);
+    const player = this.physics.add.sprite(300, 100, 'skategirl').setScale(1.5);
 
     player.setBounce(0.1);
     player.setCollideWorldBounds(true);
 
     this.anims.create({
-      key: "left",
-      frames: this.anims.generateFrameNumbers("skategirl", {
+      key: 'left',
+      frames: this.anims.generateFrameNumbers('skategirl', {
         start: 1,
         end: 5,
       }),
@@ -264,8 +265,8 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: "run",
-      frames: this.anims.generateFrameNumbers("skategirl", {
+      key: 'run',
+      frames: this.anims.generateFrameNumbers('skategirl', {
         start: 5,
         end: 10,
       }),
@@ -274,8 +275,8 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: "right",
-      frames: this.anims.generateFrameNumbers("skategirl", {
+      key: 'right',
+      frames: this.anims.generateFrameNumbers('skategirl', {
         start: 5,
         end: 9,
       }),
@@ -284,8 +285,8 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: "jumping",
-      frames: this.anims.generateFrameNumbers("skategirl", {
+      key: 'jumping',
+      frames: this.anims.generateFrameNumbers('skategirl', {
         start: 1,
         end: 5,
       }),
@@ -307,8 +308,7 @@ export default class GameScene extends Phaser.Scene {
     let minDistance = game.config.width;
 
     this.platformGroup.getChildren().forEach(function (platform) {
-      let platformDistance =
-        game.config.width - platform.x - platform.displayWidth / 2;
+      const platformDistance = game.config.width - platform.x - platform.displayWidth / 2;
       minDistance = Math.min(minDistance, platformDistance);
       if (platform.x < -platform.displayWidth / 2) {
         this.platformGroup.killAndHide(platform);
@@ -323,30 +323,30 @@ export default class GameScene extends Phaser.Scene {
     }, this);
 
     if (minDistance > this.nextPlatformDistance) {
-      var nextPlatformWidth = Phaser.Math.Between(
+      const nextPlatformWidth = Phaser.Math.Between(
         gameOptions.platformSizeRange[0],
-        gameOptions.platformSizeRange[1]
+        gameOptions.platformSizeRange[1],
       );
       this.addPlatform(
         nextPlatformWidth,
-        game.config.width + nextPlatformWidth / 2
+        game.config.width + nextPlatformWidth / 2,
       );
     }
 
     if (this.cursors.up.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(-gameOptions.jumpForce);
-      this.player.anims.play("jumping", true);
+      this.player.anims.play('jumping', true);
     } else if (this.cursors.right.isDown) {
       this.player.setVelocityX(160);
 
-      this.player.anims.play("right", true);
+      this.player.anims.play('right', true);
     } else if (this.cursors.left.isDown) {
       this.player.setVelocityX(-160);
 
-      this.player.anims.play("left", true);
+      this.player.anims.play('left', true);
     } else if (this.player.body.touching.down) {
       this.player.setVelocityX(0);
-      this.player.anims.play("run", true);
+      this.player.anims.play('run', true);
     }
   }
 }
