@@ -1,21 +1,20 @@
-import Phaser from "phaser";
-let gameID = "0KGv8uliIq1oCADYip7j";
-const fetch = require("node-fetch");
+const gameID = '0KGv8uliIq1oCADYip7j';
+const fetch = require('node-fetch');
 
 export default {
   submitNameForm: (input) => {
     let username = input.value;
-    if (username === "") {
-      username = "Nobody";
+    if (username === '') {
+      username = 'Nobody';
     }
 
-    localStorage.setItem("username", username);
+    localStorage.setItem('username', username);
   },
 
   fetchScores() {
     return fetch(
       `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${gameID}/scores`,
-      { mode: "cors" }
+      { mode: 'cors' },
     ).then((response) => response.json());
   },
 
@@ -23,16 +22,16 @@ export default {
     fetch(
       `https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/${gameID}/scores`,
       {
-        method: "POST",
-        mode: "cors",
+        method: 'POST',
+        mode: 'cors',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           user: username,
           score: score.toString(),
         }),
-      }
+      },
     );
   },
 };

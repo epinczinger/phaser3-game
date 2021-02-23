@@ -1,10 +1,11 @@
-import Phaser from "phaser";
-import helpers from "../helpers";
-require("regenerator-runtime/runtime");
+import Phaser from 'phaser';
+import helpers from '../helpers';
+
+require('regenerator-runtime/runtime');
 
 export default class LeaderboardScene extends Phaser.Scene {
   constructor() {
-    super("Leaderboard");
+    super('Leaderboard');
   }
 
   async create() {
@@ -17,26 +18,26 @@ export default class LeaderboardScene extends Phaser.Scene {
       this.game.config.width / 2,
       this.game.config.height / 2,
       this.game.config.width * (3 / 4),
-      this.game.config.height * (4 / 5)
+      this.game.config.height * (4 / 5),
     );
     Phaser.Display.Align.In.TopCenter(
-      this.add.text(0, 0, "Leaderboard", { fontSize: "55px" }),
-      this.zone
+      this.add.text(0, 0, 'Leaderboard', { fontSize: '55px' }),
+      this.zone,
     );
     const firstScoreHeight = 120;
     const leftColumn = this.game.config.width / 3;
     const rightColumn = this.game.config.width - leftColumn;
-    const fontSize = "40px";
+    const fontSize = '40px';
     const rowGap = 45;
 
     for (let i = 0; i < topScores.length; i += 1) {
       let textColour;
       switch (i) {
         case 0:
-          textColour = "green";
+          textColour = 'green';
           break;
         default:
-          textColour = "white";
+          textColour = 'white';
           break;
       }
 
@@ -47,7 +48,7 @@ export default class LeaderboardScene extends Phaser.Scene {
         {
           fontSize,
           color: textColour,
-        }
+        },
       );
 
       this.add.text(
@@ -57,13 +58,13 @@ export default class LeaderboardScene extends Phaser.Scene {
         {
           fontSize,
           color: textColour,
-        }
+        },
       );
 
-      this.add.text(10, 10, "<--- Press M to return to the menu");
+      this.add.text(10, 10, '<--- Press M to return to the menu');
 
-      this.input.keyboard.on("keydown-M", () => {
-        this.scene.start("Title");
+      this.input.keyboard.on('keydown-M', () => {
+        this.scene.start('Title');
       });
     }
   }

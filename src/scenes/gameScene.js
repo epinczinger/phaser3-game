@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import gameOptions from '../config/gameOptions';
-import helpers from "../helpers";
+import helpers from '../helpers';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -228,28 +228,28 @@ export default class GameScene extends Phaser.Scene {
     this.physics.pause();
     this.anims.pauseAll();
     this.player.setTint(0xff0000);
-    helpers.submitScore(localStorage.getItem("username"), this.score);
+    helpers.submitScore(localStorage.getItem('username'), this.score);
     this.gameOverMenu = this.add.text(
       100,
       150,
       [
-        "GAME OVER",
-        "Press M to return to the menu",
-        "Press P to play again",
-        "Press L to see the Leaderboard",
+        'GAME OVER',
+        'Press M to return to the menu',
+        'Press P to play again',
+        'Press L to see the Leaderboard',
       ],
       {
-        fontSize: "32px",
-        fill: "#000",
-      }
+        fontSize: '32px',
+        fill: '#000',
+      },
     );
 
     this.input.keyboard.on('keydown-M', () => {
       this.scene.start('Title');
     });
 
-    this.input.keyboard.on("keydown-L", () => {
-      this.scene.start("Leaderboard");
+    this.input.keyboard.on('keydown-L', () => {
+      this.scene.start('Leaderboard');
     });
 
     this.input.keyboard.on('keydown-P', () => {
