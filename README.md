@@ -3,14 +3,15 @@
 
 Implementation of an Endless game built with [Phaser 3](https://phaser.io/phaser3) framework.
 
-On this project, I've built a platform game where your player, a skategirl, has to avoid obstacles while collecting beers to gain points. Also Local storage was used to store the username, and Leaderboard API is used to track the highest scores.
+On this project, I've built an easy-play platform game where your player, a rebel skate girl, has to avoid the police and the obstacles while collecting beers to gain points. There are some standard tricks you can do while combining arrow keyboards.
+Local storage was used to store the username, and Leaderboard API is used to track the highest scores.
 
 ![screenshot](./assets/screenshot.png)
 
 
 ### How to Play
 
-You can move the player using LEFT or RIGHT arrow keys and use UP arrow key for jumping.
+You can move the player using LEFT or RIGHT arrow keys and use the UP arrow key for jumping.
 
 
 ## Built With
@@ -47,21 +48,11 @@ Once you've installed the project's dependencies, you can run the project using 
 8. Enjoy it!
 
 
-### Scenes
-
-Below are the different scenes of the game:
-1. Boot Scene
-2. Preloader Scene
-3. Title Scene
-4. Option Scene
-5. Credit Scene
-6. LeaderBoard Scene
-7. Game Scene
-
-
 ## Future Implementation
 
-Double Jump with some Skate Tricks
+Double Jump.
+Some Skate Tricks.
+Increase speed during time, so difficulty get high while you play.
 
 
 ## Author 
@@ -78,7 +69,7 @@ Double Jump with some Skate Tricks
 
 Contributions, issues and feature requests are welcome!
 
-Feel free to check the [issues page](issues/).
+Feel free to check the [issues page](https://github.com/epinczinger/phaser3-game/issues).
 
 
 ## Show your support
@@ -89,7 +80,7 @@ Give a ⭐️ if you like this project!
 ## Acknowledgments
 
 - My standup team
-- My Javascript partner @Joseph-Burke
+- My Javascript partner [Joseph-Burke](https://github.com/Joseph-Burke)
 - [Microverse](https://www.microverse.org/)
 - [Phaser](https://phaser.io/)
 - [OpenGameArt](https://opengameart.org/)
