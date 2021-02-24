@@ -30,6 +30,12 @@ You can move the player using LEFT or RIGHT arrow keys and use the UP arrow key 
 [Play Game on Live Link](https://skeight-phaser3.netlify.app/)
 
 
+## Video
+
+[Video explanation](https://www.loom.com/share/12450d3870764499815bd59d4fdd550e)
+
+
+
 ## Run the project on your local environment
 
 1. Navigate to the directory where you wanna clone the repo.
