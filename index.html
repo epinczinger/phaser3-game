@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <div class="d-flex flex-column align-items-center">
+      <div id="hide-unless-username" class="d-none">
+        <h1 class="text-center">Hello stranger</h1>
+        <div class="img-fluid">
+          <img class="img-fluid" src="./assets/skater.png" alt="" />
+        </div>
+
+        <form class="form d-flex flex-column align-items-center">
+          <div class="form-group">
+            <label for="nameInput">Write your name:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nameInput"
+              placeholder="Skeight"
+            />
+            <small> So you can see it on the leaderboard. </small>
+          </div>
+          <button class="btn btn-secondary" type="button" id="submitButton">
+            Let's play
+          </button>
+        </form>
+      </div>
+    </div>
+  </head>
+  <body>
+    <script src="production-dependencies.bundle.js"></script>
+    <script src="app.bundle.js"></script>
+  </body>
+</html>
