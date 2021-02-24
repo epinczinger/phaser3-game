@@ -1,20 +1,33 @@
 # Skeight
 ## Game Developed using Phaser 3, Webpack, and ES6.
 
-![gif](./assets/skater.gif)
-
 Implementation of an Endless game built with [Phaser 3](https://phaser.io/phaser3) framework.
-
+![gif](./assets/skater.gif)
 On this project, I've built an easy-play platform game where your player, a rebel skate girl, has to avoid the police and the obstacles while collecting beers to gain points. There are some standard tricks you can do while combining arrow keyboards.
 Local storage was used to store the username, and Leaderboard API is used to track the highest scores.
 
 ![screenshot](./assets/screenshot.png)
 
 
-### How to Play
+### How to Play.
 
 You can move the player using LEFT or RIGHT arrow keys and use the UP arrow key for jumping.
 
+## GDD
+
+### Initial Aims.
+
+In the Game Design Document, I created on the second day of this project, I was decided to work on a skate game. That was the main motivation I had. I imagined a player who can do several different tricks on the board while going through an endless environment. 
+
+### Developing.
+
+The first and main blocker I had with my former idea was to find a proper sprite or images to work with for the skate tricks. After a proper amount of time searching the best I could find was a couple of images that I had to crop, mix, and resize to create a sprite sheet to use. So there I had something to work with. But because I couldn't create many tricks I would have to change the scoring system, that's the reason why I added the Beers to collect while riding. Funny thing haha.
+The next step was to think about the condition for the game over and automatically thought about an obstacle, a naturally added obstacle.. a ROCK!! But only rocks? No, I felt we needed something else, the "bad guy", and apologies for this, but It has to be a cop. A moustache face policeman. Now we have a game!.
+
+### All that glitters is not gold.
+
+Even when the game is playable and the main functionalities are working, I feel It's needing something else, that thing that motivated me at the first moment. Yes, more Skate tricks!!, which I compromise to add later on after working over other images. 
+Amazing experience developing my first game on an unknown framework.
 
 ## Built With
 
@@ -59,7 +72,7 @@ Once you've installed the project's dependencies, you can run the project using 
 ## Future Implementation
 
 Double Jump.
-Some Skate Tricks.
+More Skate Tricks.
 Increase speed during time, so difficulty get high while you play.
 
 
