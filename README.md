@@ -1,6 +1,8 @@
 # Skeight
 ## Game Developed using Phaser 3, Webpack, and ES6.
 
+![gif](./assets/skater.gif)
+
 Implementation of an Endless game built with [Phaser 3](https://phaser.io/phaser3) framework.
 
 On this project, I've built an easy-play platform game where your player, a rebel skate girl, has to avoid the police and the obstacles while collecting beers to gain points. There are some standard tricks you can do while combining arrow keyboards.
